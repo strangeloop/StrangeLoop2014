@@ -1,0 +1,181 @@
+
+Strangeloop 2014
+
+"Write the Other Half of Your Program: From Functional to Logic Programming"
+
+Presenters: Jason Hemann and Dan Friedman.
+
+Live Captioning by Norma Miller, whitecoatcaptioning.com
+
+>> This is Jason, Hemann, I'm Dan Feldman.  We're going to talk to you today about how to take programs that are functions and turn them into programs that are relations.  On the surface this sounds maybe familiar to some of you and maybe not, but we have quite a bit of a different take on that particular process, but we're going to -- we're going to start with the idea that maybe you don't know miniKanren which is what we're going to talk about, so first we're going to give a quick introduction to miniKanren program.  All right, so equal, equal, quote A quote B.
+>> I have no idea what that's going to do.  We attempt to make those two terms syntactically equal, relative to the things that we've already made syntactically equal.
+>> Well, it's obviously going to fail.  What is that?  Oh, my goodness, did you break it?
+>> Oh, no, so we can't just go ahead and use our equal equal like that, essentially what we're doing: if we want to get the kind of answers we want out of it, we're going to have to run that using miniKanren's one answer.  So I'm running from one answer and we'll see if we can make these two things the same.
+>> And it turns out we can't.  We get back the whole list of ways that this query can succeed and we get back an empty list so it means it couldn't do any of them.  Let's try something where we get something out of it.
+>> I think that would be nice.
+>> So how can we make Q equal to quote B how many ways we can we do?  We've got the time.
+>> And there's exactly one.  And again there's going to be a list, counting so to speak the number of values that we're going to return, so in this case again quite 1.  All right, let's try something a little more sophisticated.  How about introducing another variable?
+>> OK, let's get another variable.  Oftentimes it's when writing miniKanren programs.  It says it succeeded but it doesn't mean we have any other variable.  Can you do more than one in these things are called conjuncts, in here?
+>> Let's let's say Q is the same as Y, Y is the same as X and X is same as the same as the symbol cat.  So by the transitive property we figure out that Q is the same as Y is the same as X is the same as X.
+>> We've got more than one, those are conjuncts so in a fresh they all have to succeed.  Let's see if there's a way we can introduce some choice, we do it.  We do this with the operator conde.  Conde, by the way is taken from the syntax of con, so people who are familiar with the con of some lists, excluding Clojure, of course, but it doesn't matter as they've demonstrated really well, is you can play games with miniKanren.
+>> But this should work too, shouldn't it?
+>> It should.  So how many answers should I get?
+>> God knows.  Well, three.  Three of them.
+>> OK, three.  There's three different ways this query can succeed.  OK, we'll give you something else, so now how many answers?  Any ideas?
+>> Oh, sorry.  Any ideas?
+>>
+>> OK.  So that is the small little core of miniKanren.  But we have to throw in one more and that's called equal/equal or just equality and what it says where equality says it will always be the same, this one says they were never be the same basically or they aren't the same.  No matter what happens, they stay not the same and if you do something, a little later, they may make them a same and if you do, you fail.
+>> All right.  So, this was big hefty answer.  It says it's anything you want, so long as it isn't dog.  Pick anything you want; just don't let it be dog.
+>> And that's it.  That's the entire language we're going to use today.  I always feel weird when I say we, because it includes a host of other people who were involved in the development of miniKanren.  So now we are ready to look at our first recursive definition and that is going to be append, and because of time and space etc., we're just going to use the name app.  Now, this is a plain vanilla function.  We're going to demonstrate how it works.  We know that it works, but we're going to make sure that it's still working.  This is still part of the intro.
+>> Do you want to say what that thing is going to be?
+>>
+>> I'm guessing, yeah, that's what it probably should be.
+>> So we abbreviated the append function, and appo here is the miniKanren relation.  We use basically the superscript of as the announcement that it's a relation that we're dealing with.  This, by the way, is a superscript, in case you missed that.
+>> Well, anyway, so there's the program, it's not a terribly complicated program, but we're not going to actually talk about this program, we're just going to test it, make sure it's doing the kinds of things we were hoping it would do.
+>> So the app that we've seen, we can appo work similarly, run 1Q and it's a three plea.  So the first thing we've got to do is change app to appo and put Q in the last position.  So how many ways can I have this appo where the first list and the second list combine to make the third one?  We didn't lose anything by writing it in miniKanren.  We get the same variable.
+>> Now we can throw that variable and the Q in a different spot.  So you're going to have to change your data.  So if you put the Q say first.
+>> All right, so we -- ah, you want to -- don't get confused with those quoted symbols, by the way.
+>> That's going to bear a little introduction in a second, so let's see.
+>> Here's a space missing, perhaps.  In yeah,.
+>> By the b?
+>> There we go, space there, oh, I see, just returning two values.  OK, never mind.  I thought it was a period.  I bet it doesn't look like a period on this screen.
+>> Give him plenty of room.  OK, so here we go.  What's one way you can do it if the first list is empty and the second list is the output, then those two stick together.  So thank you miniKanren is kind of sassy with the answers it gives back.  It's not doing a whole lot of extraneous work. Yeah, let's get more.  Like all of them.  And there they are and you can see that that's just sort of like --
+>> So if the list, you come in with a list a and the list b, c, d, and e, you stick them together and you get all back out.  It gives us one answer and that's with one relation.
+>> But here we can use it in this way, too, or we could go ahead and write a checker.
+>> This is why we call the equal equal operator, the big hammer.  So we can not only use it in these different varieties, we can also use it to test whether three elements exhibit this property.  So that's kind of a neat tool to have.  That's one of the promises of this relational or logic programming.
+>> Well, I'd say that we're down, now done with the introduction, I hope that we didn't go too fast, but it's -- except for this little piece here, we want to sort of give you a flavor for how we went from app to appo, OK?  So the first thing we did of course we changed the name by adding an O to it to make it a relation and we have a third argument or a last argument that we referred to as the out argument and here we're just using O, so that part of the code is pretty straightforward.  Then the conde is used in place of the con, but in the first conde clause as oppose to to the first con clause, we're saying that l has to be the empty list.  In the first we're saying if it is and here we're saying it has to be and if it actually happens to be then we get a value or out of course that is the S.  And the L clause, you see all those nested things there, like the app of the carvel and all that, we have to remove all of that nesting and we we refer to that as unnesting the expression.  So the way we do it is we use an out variable basically for every one of the operators in some sense, so here we want to break up L into a car and a cdr, and so we introduce two basic out variables and they show up here.  So importantly, our conde clauses, here they're nonoverlapping, so either it's the empty list or it's some kind of a pair.  This is -- this is our notation for saying it's a pair.  We're constructing a pair here where a is the first element and d is the second element and this back quote comma business is just what says build a pair with that structure, so either it's the empty list, it's not a pair or it is some pair.  Those are nonoverlapping cases and as Dan said, we do a whole lot of unnesting here.  OK, I think we don't want to go any further in this direction, because what we have to do now is talk about what the goals of this system we're going to show you today are.  And one of them is it will be mostly automatic, that is to say, there will be one little thing that we can't quite do automatically, just yet, but is mostly automatic and in your -- within an escape control t meta control t operation to get it to be exactly right.  Now, the other thing is that we need to show you sort of what the code is going to actually do.  So this code was hand designed and built carefully and it's correct.  We're going to try to show you how, if you had a language for writing functions, functions, not relation, but functions, carefully crafted, then it will be possible to take that program and feed it to another program that will produce miniKanren.  So all you really end up having to do is write functions but in a somewhat stylized way.
+>> All right.  So you want to go try one?
+>> Let's try one.
+>> So here's a program that will take the union of two sets, represented as lists, and with no duplicates.
+>> And here is -- that's a pretty standard definition.  That member, for those of you who are familiar with Racket and the way we do things, and all the schemes and lists that I know, when member runs, it returns the list whose car matches what we were looking for.  So we're going to have to define our own member to bcadac.
+>> There you are.  OK.  So but we'll get there, eh?
+>> Yes, we will.  All right, so let's define this union now,.
+>> OK so we've got our original function, let's start doing some of that transforming.
+>> Go for it.  The first thing you start off doing is we don't have anything like a no in miniKanren.  But primitive that way but I do have a way to know if something is no.  No is the same as asking if it's empty to the equal list.  And equal I kind of feel I could turn that into miniKanren, too.
+>> We're only writing functions.  So qdlet is like a pattern matcher and if it succeeds, it will take the body of the let and it will run it.  So here is an example and all we're doing is doing very simple transformations to our program.
+>> All right, so what is that kond with a k?  Where did that come from?
+>> It came from this program called lang.OT.
+>> It's something we wanted to make sure is the case, so we destructure s1 into this structure a.d, I know how to write that now.  Every place where I got a cdr, I know how to write that now.  Right, and we should be able to go ahead and run that.
+>> And remember, only functions.
+>> All right, no harm no foul.
+>> OK, so do you have any other tricks up your sleeve, Jason?
+>> Yeah, so we're not quite there yet.
+>> No, I see that c-con, we want a k-kond.
+>> Member isn't really what we want.  What I want is a predicate.  So we can go ahead and write that or pull it out of the oven.
+>> I'd say I'd pull it out of the oven.
+>> OK.  Do you know the metaphor formally of pull it out of the oven?  This is from the Julia Child school of cooking.  If it's not done by the time the show is over, well, look, we had one here at the whole time.  So there's a couple of those going on.  But now it returns a bullion [?], which is a whole lot better.
+>> I see a conde, I see a equal.  Take the car and cdr out,.
+>> Yeah, now, you can change those cars and cdrs to a's and d's, and now that I've got a member I can go ahead and use it.
+>> Yes, you can.  Now you want to keep working on this?
+>> Yeah, let's get that nonmember out of the way.
+>> We don't have elses in miniKanren.  It implicitly represents all the other cases.  The neat thing here is with these two lines, now I can flip them and they can go in either way I wanted.  If.  So I could flip these whichever way I want.
+>> After you get rid of that else.
+>> Yeah, well, this one I can't.  This one I can't yet, but let's give it awhirl.  The else here means not equal.  So I could now, those outer two con lines and the inner two con lines, I can put those in any way I want and the function still works.  That's neat.  That sounds like one of those properties we needed.
+>> Because after all, we don't want what's called overlapping.  See us afterwards and we'll show you this really awesome program that shows you really why you have to have this notion of nonoverlapping.
+>> All right, so I can pull these out.  And.
+>> Do you have to introduce that -- oh, sorry.  Always programming in miniKanren.
+>> Yes, it is, so the other one has that fall-through behavior.  This one doesn't.  This is something that if it doesn't destructure that pattern, raises an exception and that's a good thing to have if I'm still in function land.  There are times when debugging miniKanren programs are all kinds of mess.  Dan and I have dozens of students that can attest to that.
+>> Including ourselves.
+>> Yeah.
+>> Recently.
+>> And so I feel as long as I can stay in the land of function, I just feel more comfortable and this is one of those things that's a nice handrail.  So when I let the value of member be that res, then what I wanted to know is the result res equal to 't or #t, and I know what to do otherwise.  If it's not #t, then I know based on the program I wrote, that it's #f, because my predicate either returns true or false.
+>> All right?  And we've got one last little --
+>> We have to get rid of those nestings.
+>> Yeah, that's, that dog won't hunt.  So how about what do you want to call this one?  The value of the recursive call rec?
+>> Yeah.  You can call it rec.
+>> All right, so I don't use cons here, we've got a concise way to write that, a, rec and wouldn't you know and this too should still run.
+>> What happened to that turning that cond into a kond.
+>> Oh, I mispronounced it.
+>> I think that's it.  We should be able to give this a whirl.  OK, so the next.
+>> Make sure it goes.
+>> Is going to be.
+>> I know it's not there yet, but we'll give it a whirl.
+>> OK, take -- oh, what is that s1, that was ls, that's going to work a lot better.
+>> And there it is.  Still in business.  Now you promised me I could reorder these however I want.
+>> Yeah, I guess.
+>> So -- that's a valid order?  I can do that?  All right.  Shoot, let's -- anybody want another permutation?
+>> I think it's enough.  I'm nervous.
+>> Let's see if it does union for us.  By the way, this is a little reminiscent of dikester gars[?  ] If anyone is old enough to remember those.
+>> Well, I've got to put it in the right directory.
+>> Can you just pop it in?  No?
+>>
+>> Oh, well, can't actually run it before you -- as it turns out, the actual program needs to -- that order does matter.
+>> Yeah.
+[laughter]
+>> All right.
+>> And there it is.  OK, so now what we can do is hand build the miniKanren from this, and then with the remaining time, we will show you how to do it automatically.  So you ready, Jason?
+>> Stick it back in the usual ordering, because that looks a little bit more like what we had before.
+>> OK, you might as well start with member again.
+>> So we're miniKanrenizing.
+>> OK, and search and replace.  The first most important move when you're writing miniKanren functions is to stick an o on the end.
+>> That's got to be done.
+>> OK, now we're miniKanren land.  It's poorly named.  But three place relation to from a two-place function.  All right, so kond goes to conde, and this equal goes to equal equal.  We don't have return values, instead we unify that with the out.
+>> Exactly.
+>> Let here has just luckily enough set up for us exactly the variables that we're going to need to create.  So pressure a and d, pull that up here.  And so what I want to do is I now want to unify those variables together.  So now I've got another conde, and equal, equal, where now #t is unified with the out.
+>> Right.  Otherwise, it is not equal case, how am I going to translate not equal.
+>> How about equal/equal?
+>> Now about not euwe, that sounds pretty good.
+>> So this one is done.  Would you like to demonstrate it?
+>> Let's demonstrate.  I want to come back and draw some compare and contrast.
+>> Yeah, of course, I'll let you do that.  If Chronos will:
+>> Run 1q, fresh b.
+>> Member?  0, "X and ab -- oh, how about a, b, -- x, y, b, z, with q,.
+>> Well, you made x first, that's not very friendly.
+>> OK, w, w, x, there you go.
+>> All right.  Now return true.  Now return true twice.
+>> OK, and we're done.  Right?  Because it's a run star which means all of the answers you can get.
+>> All right.  Now, --
+>> So that's a proof and there's two ways it can be in there.  It could have been that this was the x or it could have been that this was the x, but either way there's an x in there, we know that.
+>> .  There's two ways to -- it could be in there and it could not be in there, because this variable b, it either could match on this line or it could match on this line and that accounts for the two answers we're getting.
+>> OK, so what we want to do next is finish the union, right?
+>> OK.
+>> You want to sneak something?
+>> I wanted to do a quick compare and contrast.  One of the things I thought was neat about this is we found a way to write our functions in a way with a miniKanren can just kind of fall out naturally and that's a neat thing to have.  It member question mark turns into member.  
+     Mark O with looking at app and appo.  This one we managed to massage it in a way --
+>> So this tool is that you have, is it going to be able to do app and appo?
+>> Yeah.
+>> But let's not.  But there's going to be opportunities for everyone.  So fear not.
+>> And it's going on the GitHub and such, right?
+>> Let's run the same play over this one.
+>>
+>> Oh, we can't forget that member o, and now you can use conde, and then equal equal, and then o equal equal s2o, and then this is going to be a fresh of ad and then then an equal equal of that to -- what happened to that n, where is that coming from in.
+>> Oh, that was in there for show.
+>> Mm-hm and we have another little thing like that to deal with.
+>> All right, so now it set us up for a couple of recursive variables we need to make.  Again, let's --
+>> You res and you need rec and now I know what -- put the res right in the end there, pull it out.  And.
+>> Do the same thing for union?
+>> Here.  So you may have notice that had we had too many cursive calls here inside this fresh, and that is somewhat problem at cal sometimes and that's one of the reasons why this is more of a proof of concept than a completely running wonderful unbelievable system.  It is just we're starting this line of thinking.
+>> Now, this is what the nonstraightforward translation gets us is it turns out if we'd done this with app to appo, we'd have had the recursive call above that unification up there.
+>> So if we -- if we transformed appo, we'd have wound up with this, and fix it we had to do escape CTRL-D.
+>> We ready to run this now?
+>> We should be able to give it a shot.
+>> Let's see if we can give it a shot.  It ate our union.  So run 1q, uniono oabc, dce, q, and there's your answer and.
+>> Very nice.
+>> You can start playing all sorts of games in standard ways.  Can you do a run 2 and get something interesting?
+>> But you need to put some more variables in.
+>> OK, give me -- yeah, yeah, sure, I see what you're going for.  Let's run it in those different ways like we've been doing before.
+>> Remember that this union is virtually the same as append except, but it doesn't allow duplicates, right, of course?  That's the way we think about it, it's just append and it avoids duplicates.  So are you ready to show us the magical thing that's going to happen now?
+>> Yeah, sure, so we -- well, better make sure we can see the output, so equal equal q to s1, s2,.
+>> Let's see what we get.
+>> OK, what is that d, d thing doing down there?
+>> Now, that does not look good, Dan.
+>> I think that's a real problem, Jason.
+>> So so what we promised is that a list with new duplicate.  We said that there.
+>> So and this is the sort of thing that happens often you know when you're doing miniKanren programming and that means you sort of dig through the relation, and believe it or not the programs get a little bigger than this, Will and Dan have written a bunch of really neat kind of programs, but trying to make them work just so you leave out a comma quote instead of a comma and you put in a con instead conde.  The problem was in our function, so what I'd now like to be able to do, the goal is so that we could then go back to our function that we started with, figure out oh, e here's what happened.  And then after we add that assertion, we just rerun these steps and end up in another relation, try it out, give it a whirl, we don't like that one, fix it up a little bit more.  But go back to the functions, working the functions and do the translation and that's what we're hoping to get.
+>> All right, so -- does this -- some of this is automated, then?
+>> Yeah.
+>> So let's take a look in your very little small window.
+>> So this is a little different than the one we showed.  So transform to mini.  We take that -- boy that got a little big, didn't it?  You'll notice a couple things.  We've got a few more structural quasi-quotes in there.  But I can take a program, I don't need two of those.  And run back and generate the miniKanren program that we wanted.  It's got the run 1 at the end, variables in the right places and this goes ahead and runs too.
+>> So can you run that.  Something is funny, isn't it?
+>> Oh, sorry.  Oh, and we get back at the answer.
+>> Can you go to anything else?
+>> Can you show us anything else like some microKanren, perhaps.
+>> I don't know what that is, Dan.
+>> Oh, microKanren is this really small functional core, no macros allowed, that gives you another power to do everything that miniKanren can do, but all as functions.  Some languages, macro systems maybe aren't what Rackets is, or even Scheme, so we wanted for a long time to have five little operators.
+>> Yeah, so miniKanren, this implementation is written in a bunch of Racket macros.  We now solve it back into Racket functions or we can take it all the way down, transform plus run and just transform it all the way to the answer.
+>> I'm not seeing any micro.  Where is your micro?
+>> Oh, this was that big whole --
+>> Monster.  So it's more like an assembly language than a -- but it's kind of neat because assembly language is you know, you tinker about them and thinking about them in ways that you maybe wouldn't have thought about things.  So I kind of like it a lot.
+>> All right, but that's us.
+>> Thank you very much.
+[break] 
